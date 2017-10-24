@@ -1,10 +1,8 @@
-# To Set Up This Baby
+# To Set Up This Bad-Boy
 
 ```
-git clone
+git clone https://github.com/keith471/crypto_sentiment.git
 virtualenv env
 source env/bin/activate
-pip freeze > requirements.txt
 pip install -r requirements.txt
-deactivate
 ```
