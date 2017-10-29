@@ -4,6 +4,11 @@
 *validationMethod (type=string, example=PoW, indexed=true)
 *hashingAlgorithm (type=string, example=sha256, indexed=true)
 
+##Price: an object that records the price of a cryptocurrency in USD.
+*coin (type=Coin, indexed=true)
+*price (type=double)
+*createdAt (type=timestamp, indexed=true)
+
 ##TextSummary: an object that records processed information related to a post or text document about cryptocurrency.
 *coin (type=Coin, indexed=true)
 *rawText (type=string)
@@ -21,4 +26,3 @@
 *since (type=long)
 *maximum (type=long)
 *createdAt (type=timestamp, indexed=true)
-
