@@ -6,3 +6,6 @@ virtualenv env
 source env/bin/activate
 pip install -r requirements.txt
 ```
+
+##Other Resources
+*Python Mongo ORM docs: https://mongoengine-odm.readthedocs.io/guide/defining-documents.html#fields

@@ -8,6 +8,8 @@ import os
 from sentiment_analyzer import SentimentAnalyzer
 from preprocessor import Preprocessor
 
+from mongoengine import connect
+
 #===============================================================================
 # Arugment parsing
 #===============================================================================
@@ -26,6 +28,17 @@ if args.h:
     parser.print_help()
 
 print()
+
+#===============================================================================
+# Connecting to MongoDB
+#===============================================================================
+
+connect(
+    db='crypto',
+    username='frances',
+    password='thuglife',
+    host='mongodb://127.0.0.1'
+)
 
 #===============================================================================
 # Main
