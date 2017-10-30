@@ -1,4 +1,4 @@
-'''Magages the database'''
+'''Manages the database'''
 
 class DatabaseManager(object):
 
@@ -10,5 +10,3 @@ class DatabaseManager(object):
         Converts the object into a Document and saves it to the database.
         '''
         pass
-
-    
