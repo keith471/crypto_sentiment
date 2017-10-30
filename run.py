@@ -5,8 +5,8 @@ from argparse import ArgumentParser
 import sys
 import os
 
-from sentiment_analyzer import SentimentAnalyzer
-from preprocessor import Preprocessor
+from sentiment/sentiment_analyzer import SentimentAnalyzer
+from sentiment/preprocessor import Preprocessor
 
 from mongoengine import connect
 

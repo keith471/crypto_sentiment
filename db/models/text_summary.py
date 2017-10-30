@@ -10,6 +10,7 @@ class TextSummary(Document):
 	coin = ReferenceField(Coin)
 	raw_text = StringField(max_length=512)
 	sentiment = DecimalField()
+    score = DecimalField()
 	tags = ListField(StringField(max_length=10))
 	user_id = UUIDField()
 	reshare_count = IntField()

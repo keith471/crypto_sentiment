@@ -1,1 +1,0 @@
-'''Magages the database'''
