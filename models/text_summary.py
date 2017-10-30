@@ -1,13 +1,15 @@
 '''an object that records processed information related to a post or text document about cryptocurrency'''
 from mongoengine import Document
 from mongoengine.fields import *
+from .provider import Provider
 from .coin import Coin
 from datetime import *
 
 class TextSummary(Document):
+    provider = ReferenceField(Provider)
 	coin = ReferenceField(Coin)
-	raw_text = StringField(max_length=200)
-	sentiment = IntField()
+	raw_text = StringField(max_length=512)
+	sentiment = DecimalField()
 	tags = ListField(StringField(max_length=10))
 	user_id = UUIDField()
 	reshare_count = IntField()
@@ -19,6 +21,7 @@ class TextSummary(Document):
 		'allow_inheritance': True,
 		'ordering': ['-posted_at'],
 		'indexes': [
+            'provider',
 			'coin',
 			'tags',
 			'user_id',
