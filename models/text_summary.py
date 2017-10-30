@@ -1,17 +1,17 @@
 '''an object that records processed information related to a post or text document about cryptocurrency'''
 from mongoengine import Document
 from mongoengine.fields import *
-from coin import Coin
+from .coin import Coin
 from datetime import *
 
 class TextSummary(Document):
 	coin = ReferenceField(Coin)
-	raw_text = StringField(max_length=130)
+	raw_text = StringField(max_length=200)
 	sentiment = IntField()
-	tags = ListField(StringField(max_length=10)) 
+	tags = ListField(StringField(max_length=10))
 	user_id = UUIDField()
 	reshare_count = IntField()
-	reshare_users = ListField(UUIDField()) 
+	reshare_users = ListField(UUIDField())
 	posted_at = DateTimeField()
 	created_at = DateTimeField(default=datetime.utcnow)
 	updated_at = DateTimeField(default=datetime.utcnow)
@@ -27,4 +27,3 @@ class TextSummary(Document):
 			'updated_at'
 		]
 	}
-	

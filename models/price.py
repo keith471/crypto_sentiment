@@ -1,7 +1,7 @@
 '''an object that records the price of a cryptocurrency in USD'''
 from mongoengine import Document
 from mongoengine.fields import *
-from coin import Coin
+from .coin import Coin
 from datetime import *
 
 class Price(Document):
@@ -16,4 +16,3 @@ class Price(Document):
 			'created_at'
 		]
 	}
-	

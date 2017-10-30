@@ -13,5 +13,7 @@ connect(
 btn = "BTC"
 btc_coin = Coin.objects(ticker=btn)
 if btc_coin.count() == 0:
-	print 'adding BTC'
+	print('adding BTC')
 	Coin(ticker=btn,name="Bitcoin",validation_method="Pow",hashing_algorithm="sha256").save()
+
+# TODO: initialize stock_twits_cursor
