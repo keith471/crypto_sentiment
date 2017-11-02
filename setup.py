@@ -3,10 +3,10 @@ from datetime import datetime, timedelta
 from mongoengine import connect
 
 connect(
-	db='crypto',
+	db='crypto_test',
 	username='frances',
 	password='thuglife',
-	host='mongodb://127.0.0.1'
+	host='mongodb://192.168.0.50'
 )
 
 ## Add bitcoin as a coin of interest

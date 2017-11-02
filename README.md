@@ -13,8 +13,10 @@ docker run -d -p 27017:27017 -p 28017:28017 -e MONGODB_USER="frances" -e MONGODB
 ```
 ** Run mongodb shell locally
 ```
-mongo crypto -u frances -p thuglife
+mongo [db_name] -u [username] -p [password]
 ```
+** Run mongobd shell with remote 
+mongo [host]:[port]/[db_name] -u [username] -p [password]
 
 # To start the web api
 ```
@@ -25,4 +27,4 @@ flask run
 ##Other Resources
 *Python Mongo ORM docs: https://mongoengine-odm.readthedocs.io/guide/defining-documents.html#fields
 
-
+192.168.0.50

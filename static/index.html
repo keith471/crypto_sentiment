@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Visualizer</title>
+	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap-side-navbar/source/assets/stylesheets/navbar-fixed-side.css"/>
+	<link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.min.css">
+	
+</head>
+<body ng-app="Visualizer">
+	<div ui-view></div>
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="bower_components/angular/angular.min.js"></script>
+	<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+	<script type="text/javascript">
+
+		var app = angular.module('Visualizer', ['ui.router']);
+		app.config(function($stateProvider, $urlRouterProvider) {
+    		$urlRouterProvider.otherwise('/home');
+		    $stateProvider
+		        .state('home', {
+		            url: '/home',
+		            templateUrl: 'views/home.html',
+		            controller: 'HomeController'
+		        });       
+		});
+
+		app.service('Data', function($http, $sce) { 
+			this.getCoins = function(callback) { 
+				$http.get('/coins').then(function (data) { 
+					cache.put('home', d);
+					callback(data); 
+				}); 
+			}
+		});
+	</script>
+	<script src="controllers/home.js"></script>
+</body>
+</html>
