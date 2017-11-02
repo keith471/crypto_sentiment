@@ -1,20 +1,40 @@
-from flask import Flask
+from flask import Flask, Response
 from mongoengine import connect
+from argparse import ArgumentParser
+from db.models import Coin, StockTwitsCursor, TextSummary, Price
 
-from models.coin import Coin
-from models.stock_twits_cursor import StockTwitsCursor
-from models.text_summary import TextSummary
-from models.price import Price
+from environment import Environment
 
 import json
 from datetime import datetime, timedelta
 from decimal import Decimal
 
+#===============================================================================
+# Arugment parsing
+#===============================================================================
+
+parser = ArgumentParser()
+parser.add_argument('env', type=str, action='store', help='the environment')
+parser.add_argument('--h', action='store_true', help='if set, usage will be printed out')
+args = parser.parse_args()
+
+## TODO error checking on the args
+
+if args.h:
+    parser.print_help()
+
+print()
+
+#===============================================================================
+# Connecting to MongoDB
+#===============================================================================
+
+env = Environment(args.env)
 connect(
-	db='crypto',
-	username='frances',
-	password='thuglife',
-	host='mongodb://127.0.0.1'
+	db=env.DB_NAME,
+	username=env.DB_USERNAME,
+	password=env.DB_PASSWORD,
+	host='mongodb://' + env.DB_HOST
 )
 
 app = Flask(__name__)
@@ -37,14 +57,13 @@ def static_proxy(path):
 
 @app.route('/api/coins')
 def coins():
-	Coin.objects
 	json_arr = []
 	for coin in Coin.objects:
 		data = {}
 		data['ticker'] = coin.ticker
 		data['name'] = coin.name
 		json_arr.append(data)
-	return json.dumps(json_arr, default=default)
+	return Response(json.dumps(json_arr, default=default), mimetype='application/json')
 
 @app.route('/api/prices/<ticker>')
 def prices(ticker):
@@ -56,16 +75,19 @@ def prices(ticker):
 		data['price'] = price.price
 		data['created_at'] = price.created_at
 		json_arr.append(data)
-	return json.dumps(json_arr, default=default)
+	return Response(json.dumps(json_arr, default=default), mimetype='application/json')
 
 @app.route('/api/textSummaries/<ticker>')
 def text_summaries(ticker):
 	coin = Coin.objects.get(ticker=ticker)
-	text_summaries = TextSummary.objects(coin=coin,created_at__gte=(datetime.now() - timedelta(days=7)))
+	text_summaries = TextSummary.objects(coin=coin,posted_at__gte=(datetime.now() - timedelta(days=7)))
 	json_arr = []
 	for text_summary in text_summaries:
 		data = {}
 		data['sentiment'] = text_summary.sentiment
-		data['created_at'] = text_summary.created_at
+		data['posted_at'] = text_summary.posted_at
 		json_arr.append(data)
-	return json.dumps(json_arr, default=default)
+	return Response(json.dumps(json_arr, default=default), mimetype='application/json')
+
+if __name__ == '__main__':
+    app.run()

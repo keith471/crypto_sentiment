@@ -3,22 +3,42 @@
 
 # In[12]:
 
-
 import requests
 from mongoengine import connect
-from models import Coin, TextSummary, StockTwitsCursor
-
+from db.models import Coin, TextSummary, StockTwitsCursor
+from datetime import *
+from environment import Environment
+from argparse import ArgumentParser
 
 # In[13]:
 
+#===============================================================================
+# Arugment parsing
+#===============================================================================
 
+parser = ArgumentParser()
+parser.add_argument('env', type=str, action='store', help='the environment')
+parser.add_argument('--h', action='store_true', help='if set, usage will be printed out')
+args = parser.parse_args()
+
+## TODO error checking on the args
+
+if args.h:
+    parser.print_help()
+
+print()
+
+#===============================================================================
+# Connecting to MongoDB
+#===============================================================================
+
+env = Environment(args.env)
 connect(
-    db='crypto',
-    username='frances',
-    password='thuglife',
-    host='mongodb://127.0.0.1'
+    db=env.DB_NAME,
+    username=env.DB_USERNAME,
+    password=env.DB_PASSWORD,
+    host='mongodb://' + env.DB_HOST
 )
-
 
 # In[3]:
 
@@ -47,9 +67,8 @@ def save_msg(msg):
     TextSummary(
         coin=btc_coin,
         raw_text=msg['body'],
-        posted_at=msg['created_at'],
+        posted_at=datetime.strptime(msg['created_at'], "%Y-%m-%dT%H:%M:%SZ" ),
     ).save()
-
 
 # In[14]:
 

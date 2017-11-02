@@ -6,11 +6,11 @@ from .coin import Coin
 from datetime import *
 
 class TextSummary(Document):
-    provider = ReferenceField(Provider)
+	provider = ReferenceField(Provider)
 	coin = ReferenceField(Coin)
 	raw_text = StringField(max_length=512)
 	sentiment = DecimalField()
-    score = DecimalField()
+	score = DecimalField()
 	tags = ListField(StringField(max_length=10))
 	user_id = UUIDField()
 	reshare_count = IntField()
@@ -22,7 +22,7 @@ class TextSummary(Document):
 		'allow_inheritance': True,
 		'ordering': ['-posted_at'],
 		'indexes': [
-            'provider',
+			'provider',
 			'coin',
 			'tags',
 			'user_id',

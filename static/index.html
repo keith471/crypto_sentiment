@@ -5,19 +5,30 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Visualizer</title>
 	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap-side-navbar/source/assets/stylesheets/navbar-fixed-side.css"/>
 	<link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.min.css">
 	
 </head>
 <body ng-app="Visualizer">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#/home"><i class="fa fa-line-chart" aria-hidden="true"></i></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavDropdown">
+			<ul class="navbar-nav">
+			</ul>
+		</div>
+	</nav>
 	<div ui-view></div>
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/popper.js/dist/umd/popper.min.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="bower_components/angular/angular.min.js"></script>
 	<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+	<script src="bower_components/chart.js/dist/Chart.min.js"></script>
+	<script src="bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
 	<script type="text/javascript">
-
-		var app = angular.module('Visualizer', ['ui.router']);
+		var app = angular.module('Visualizer', ['ui.router', 'chart.js']);
 		app.config(function($stateProvider, $urlRouterProvider) {
     		$urlRouterProvider.otherwise('/home');
 		    $stateProvider
@@ -25,14 +36,31 @@
 		            url: '/home',
 		            templateUrl: 'views/home.html',
 		            controller: 'HomeController'
-		        });       
+		        });
 		});
-
 		app.service('Data', function($http, $sce) { 
-			this.getCoins = function(callback) { 
-				$http.get('/coins').then(function (data) { 
-					cache.put('home', d);
-					callback(data); 
+			this.getCoins = function() { 
+				return $http.get('/api/coins').then(function (data) { 
+					if (data.status === 200) {
+						return data.data; 
+					}
+					return [];
+				}); 
+			},
+			this.getTextSummariesForCoin = function(coinTicker) { 
+				return $http.get('/api/textSummaries/' + coinTicker).then(function (data) { 
+					if (data.status === 200) {
+						return data.data; 
+					}
+					return [];
+				}); 
+			},
+			this.getPricesForCoin = function(coinTicker) { 
+				return $http.get('/api/prices/' + coinTicker).then(function (data) { 
+					if (data.status === 200) {
+						return data.data; 
+					}
+					return [];
 				}); 
 			}
 		});

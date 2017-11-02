@@ -1,12 +1,35 @@
-from models.coin import Coin
+from db.models import Coin
 from datetime import datetime, timedelta
 from mongoengine import connect
+from argparse import ArgumentParser
+from environment import Environment
 
+#===============================================================================
+# Arugment parsing
+#===============================================================================
+
+parser = ArgumentParser()
+parser.add_argument('env', type=str, action='store', help='the environment')
+parser.add_argument('--h', action='store_true', help='if set, usage will be printed out')
+args = parser.parse_args()
+
+## TODO error checking on the args
+
+if args.h:
+    parser.print_help()
+
+print()
+
+#===============================================================================
+# Connecting to MongoDB
+#===============================================================================
+
+env = Environment(args.env)
 connect(
-	db='crypto_test',
-	username='frances',
-	password='thuglife',
-	host='mongodb://192.168.0.50'
+	db=env.DB_NAME,
+	username=env.DB_USERNAME,
+	password=env.DB_PASSWORD,
+	host='mongodb://' + env.DB_HOST
 )
 
 ## Add bitcoin as a coin of interest
