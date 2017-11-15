@@ -13,7 +13,6 @@ pip install -r requirements.txt
 python setup.py [env]
 ```
 
-
 # Mongodb 
 ## Run db locally in docker container (using example username/password)
 ###### Note: you shoudn't have to do this if you are running in the test environment
@@ -29,17 +28,8 @@ docker start [container-id]
 mongo [db_name] -u [username] -p [password]
 ```
 ## Run mongobd shell with remote 
+```
 mongo [host]:[port]/[db_name] -u [username] -p [password]
-
-
-# Tweet collector
-```
-python Stocktwits.py [env]
-```
-
-# Sentiment analyzer
-```
-python run.py [env]
 ```
 
 # Web visualizer
@@ -50,7 +40,6 @@ cd static && bower install
 cd ..
 python server.py [env]
 ```
-
 
 ## Other Resources
 *Python Mongo ORM docs: https://mongoengine-odm.readthedocs.io/guide/defining-documents.html#fields

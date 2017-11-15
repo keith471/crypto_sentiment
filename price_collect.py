@@ -1,16 +1,14 @@
-# WARN: THIS FILE CREATED FROM JUYPTER_NOTEBOOK, DO NOT MODIFY
-# coding: utf-8
-
-# In[12]:
-
 import requests
 from mongoengine import connect
-from db.models import Coin, TextSummary, StockTwitsCursor
-from datetime import *
-from environment import Environment
-from argparse import ArgumentParser
+from db.models import Coin, Price
 
-# In[13]:
+from datetime import *
+import time
+import schedule
+import logging
+
+from config.environment import Environment
+from argparse import ArgumentParser
 
 #===============================================================================
 # Arugment parsing
@@ -26,8 +24,6 @@ args = parser.parse_args()
 if args.h:
     parser.print_help()
 
-print()
-
 #===============================================================================
 # Connecting to MongoDB
 #===============================================================================
@@ -40,38 +36,26 @@ connect(
     host='mongodb://' + env.DB_HOST
 )
 
-# In[3]:
+logger = logging.getLogger()
 
-
-# make sure setup.py was run first
 btc_coin = Coin.objects(ticker='BTC').first()
 assert(btc_coin is not None)
 
-
-# In[4]:
-
-
-# lets ignore this for now
-# st_cursor = StockTwitsCursor.objects().first()
-# assert(st_cursor is not None)
-
-# and just get a dump of the latest 30 messages
-r = requests.get('https://api.stocktwits.com/api/2/streams/symbol/BTC.json')
-assert(r.status_code == 200)
-
-
-# In[7]:
-
-
-def save_msg(msg):
-    TextSummary(
+def collect():
+    r = requests.get('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD')
+    assert(r.status_code == 200)
+    msg = r.json()
+    now = datetime.now()
+    Price(
         coin=btc_coin,
-        raw_text=msg['body'],
-        posted_at=datetime.strptime(msg['created_at'], "%Y-%m-%dT%H:%M:%SZ" ),
+        price=msg['USD'],
+        created_at=now
     ).save()
+    logger.info('saving coin price at date: %s' % now)
 
-# In[14]:
+schedule.every(10).minutes.do(collect)
+collect()
 
-
-for msg in r.json()['messages']:
-    save_msg(msg)
+while 1:
+    schedule.run_pending()
+    time.sleep(1)
