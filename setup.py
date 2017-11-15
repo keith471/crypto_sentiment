@@ -2,7 +2,7 @@ from db.models import Coin
 from datetime import datetime, timedelta
 from mongoengine import connect
 from argparse import ArgumentParser
-from environment import Environment
+from config.environment import Environment
 
 #===============================================================================
 # Arugment parsing

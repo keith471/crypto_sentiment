@@ -3,7 +3,7 @@ from mongoengine import connect
 from argparse import ArgumentParser
 from db.models import Coin, StockTwitsCursor, TextSummary, Price
 
-from environment import Environment
+from config.environment import Environment
 
 import json
 from datetime import datetime, timedelta
