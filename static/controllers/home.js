@@ -1,61 +1,67 @@
 angular.module('Visualizer')
 .controller('HomeController', function ($scope, Data) {
-	$scope.data = [];
-	$scope.series = [];
-	$scope.datasetOverride = [{yAxisID: 'y-axis-1'}, {yAxisID: 'y-axis-2'}];
-  	$scope.options = {
-	    scales: {
-			yAxes: [
-				{
-					id: 'y-axis-1',
-					type: 'linear',
-					display: true,
-					position: 'left'
+	$scope.options = {
+		chart: {
+			type: 'multiChart',
+			height: 500,
+			margin : {
+				top: 30,
+				right: 60,
+				bottom: 50,
+				left: 70
+			},
+			duration: 500,
+			xAxis: {
+				axisLabel: 'Date',
+				tickFormat: function(d){
+					return d3.time.format('%m-%d %H:%M')(new Date(d))
 				},
-				{
-					id: 'y-axis-2',
-					type: 'linear',
-					display: true,
-					position: 'right'
+				rotateLabels: 30
+			},
+			yAxis1: {
+				tickFormat: function(d){
+					return d;
 				}
-			]
-	    }
+			},
+			yAxis2: {
+				tickFormat: function(d){
+					return d;
+				}
+			}
+		}
 	};
 
 	Data.getCoins().then((data) => {
 		$scope.coinStr = data.map((coin) => coin.name).reduce((acc, val) => val);
 	});
 
+	$scope.data = [
+		{
+			key: 'Text Summary Sentiment',
+			type: 'line',
+			yAxis: 1
+		},
+		{
+			key: 'Price in USD',
+			type: 'line',
+			yAxis: 2,
+		}
+	];
+
 	Data.getTextSummariesForCoin('BTC').then((data) => {
-		$scope.series.push('Text Summary Sentiment');
-		var textSummaryMap = {};
-		data.forEach((point) => {
-			textSummaryMap[new Date(point.posted_at)] = point.sentiment;
+		$scope.data[0].values = data.map((point) => {
+			return {
+				x: new Date(point.posted_at).getTime(),
+				y: point.sentiment
+			};
 		});
-
 		Data.getPricesForCoin('BTC').then((data) => {
-			$scope.series.push('Price in USD');
-			var priceMap = {};
-			data.forEach((point) => {
-				priceMap[new Date(point.created_at)] = point.price;
+			$scope.data[1].values = data.map((point) => {
+				return {
+					x: new Date(point.created_at).getTime(),
+					y: point.price
+				};
 			});
-
-			var labels = Object.keys(textSummaryMap).concat(Object.keys(priceMap));
-			labels.sort(function(a, b){
-				return b - a;
-			});
-			$scope.labels = labels;
-
-			var textSummaryData = [];
-			var priceData = [];
-			labels.forEach((date) => {
-				textSummaryData.push(!!textSummaryMap[date] ? textSummaryMap[date] : null);
-				priceData.push(!!priceMap[date] ? priceMap[date] : null);
-			});
-			$scope.data.push(textSummaryData);
-			$scope.data.push(priceData);
 		});
 	});
-
-	
 });

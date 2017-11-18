@@ -39,4 +39,10 @@ if btc_coin.count() == 0:
 	print('adding BTC')
 	Coin(ticker=btn,name="Bitcoin",validation_method="Pow",hashing_algorithm="sha256").save()
 
+eth = "ETH"
+eth_coin = Coin.objects(ticker=eth)
+if eth_coin.count() == 0:
+	print('adding ETH')
+	Coin(ticker=eth,name="Ethereum",validation_method="PoS",hashing_algorithm="ethash").save()
+
 # TODO: initialize stock_twits_cursor
