@@ -34,9 +34,12 @@ fi
 echo "starting tweet collector/analyzer"
 python stocktwits_collect_analyze.py test > 'logs/out.stocktwits_collect_analyze.log' 2>&1 &
 
-# Tweet collector and analyzer
-echo "starting coin price collector"
-python price_collect.py test > 'logs/out.price_collect.log' 2>&1 &
+# Coin collector
+echo "starting bitcoin price collector"
+python price_collect.py test BTC > 'logs/out.price_collect.btc.log' 2>&1 &
+
+echo "starting ethereum price collector"
+python price_collect.py test ETH > 'logs/out.price_collect.eth.log' 2>&1 &
 
 # Web visualizer
 echo "installing bower components"
