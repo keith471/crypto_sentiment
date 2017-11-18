@@ -13,3 +13,4 @@ mongoengine==0.14.3
 flask
 dotenv
 schedule
+oauth2

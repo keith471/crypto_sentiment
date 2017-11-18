@@ -16,6 +16,7 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument('env', type=str, action='store', help='the environment')
+parser.add_argument('ticker', type=str, action='store', help='the coin ticker')
 parser.add_argument('--h', action='store_true', help='if set, usage will be printed out')
 args = parser.parse_args()
 
@@ -38,16 +39,17 @@ connect(
 
 logger = logging.getLogger()
 
-btc_coin = Coin.objects(ticker='BTC').first()
-assert(btc_coin is not None)
+coin = Coin.objects(ticker=args.ticker).first()
+assert(coin is not None)
 
 def collect():
-    r = requests.get('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD')
+    url = 'https://min-api.cryptocompare.com/data/price?fsym=%s&tsyms=USD' % (args.ticker)
+    r = requests.get(url)
     assert(r.status_code == 200)
     msg = r.json()
     now = datetime.now()
     Price(
-        coin=btc_coin,
+        coin=coin,
         price=msg['USD'],
         created_at=now
     ).save()
